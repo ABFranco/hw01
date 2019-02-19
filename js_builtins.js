@@ -21,11 +21,28 @@ window.builtins = {};
 
 builtins.trim = function(str) {
   let newStr = "";
+  let first = 0;
+  let last = 0;
   for (let i = 0; i < str.length; i++) {
-    if (str[i] !== " ") {
-      newStr += str[i];
+    if (str[i] == " ") {
+      let j = i;
+      while (j < str.length && str[j] == " ") {
+        j += 1;
+      }
+      i == j;
+      if (j == str.length) {
+        break;
+      }
+    }
+
+    last += 1;
+
+    if (str[0] == " " && first == 0 && str[i] !== " ") {
+      first = i;
+      last = i + 1;
     }
   }
+  newStr = str.substring(first, last);
   return newStr;
 };
 
@@ -45,7 +62,7 @@ builtins.trim = function(str) {
 // ex. builtins.search('Horizons', 'h') -> false
 
 builtins.search = function(sourceString, searchString) {
-  if (searchString.indexOf(sourceString)) {
+  if (sourceString.indexOf(searchString) > 0 || searchString == "") {
     return true;
   } else {
     return false;
@@ -65,6 +82,20 @@ builtins.search = function(sourceString, searchString) {
 // ex. builtins.reverse([123]) -> [123]
 
 builtins.reverse = function(arr) {
-  let next = arr.unshift();
-  return builtins.reverse(arr).concat(next);
+  //console.log(arr);
+  if (arr.length <= 1) {
+    return arr;
+  }
+  let prev = arr[0];
+  let next = arr[arr.length - 1];
+
+  arr[0] = next;
+  arr[arr.length - 1] = prev;
+  return arr
+    .slice(0, 1)
+    .concat(
+      builtins
+        .reverse(arr.slice(1, arr.length - 1))
+        .concat(arr.slice(arr.length - 1))
+    );
 };
